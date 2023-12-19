@@ -1,0 +1,327 @@
+openapi: 3.0.0
+servers:
+  - url: http://localhost:8080/
+info:
+  title: Cash track API
+  version: '1.0'
+paths:
+  /account:
+    get:
+      tags:
+        - Account
+      operationId: get_accounts
+      parameters:
+        - in: query
+          name: account-id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          required: false
+          name: name
+          schema:
+            type: string
+        - in: query
+          required: false
+          name: username
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json: 
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDTO'
+        '400':
+          description: Could not fetch account(s)
+        '500':
+          description: Internal server error
+    post:
+      tags:
+        - Account
+      operationId: create_account
+      requestBody:
+        description: New account information
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountDTO'
+      responses:
+        '201':
+          description: Account successfully created
+        '400':
+          description: Could not create account
+
+  /account/{account-id}:
+    delete:
+      tags:
+        - Account
+      operationId: delete_account
+      parameters:
+        - in: path
+          name: account-id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account deleted
+        '400':
+          description: Could not delete account
+
+  /group:
+    get:
+      tags:
+        - Group
+      operationId: get_groups
+      parameters:
+        - in: query
+          name: group_id
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GroupDTO'
+        '400':
+          description: Could not fetch group(s)
+    post:
+      tags:
+        - Group
+      operationId: create_group
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupDTO'
+      responses:
+        '201':
+          description: Group successfully created
+        '400':
+          description: Could not create new group
+    
+  /group/{group-id}:
+    delete:
+      tags:
+        - Group
+      operationId: delete_group
+      parameters:
+        - in: path
+          name: group-id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Group deleted
+        '400':
+          description: Could not delete group
+
+  /group/{group-id}/account/{account-id}/add:
+    put:
+      tags:
+        - Group
+      operationId: add_account_to_group
+      parameters:
+        - in: path
+          name: group-id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: account-id
+          required: true
+          schema: 
+            type: integer
+      responses:
+        '200':
+          description: Account added to group
+        '400':
+          description: Could not add account to group
+
+  /group/{group-id}/account/{account-id}/remove:
+    put:
+      tags:
+        - Group
+      operationId: remove_account_from_group
+      parameters:
+        - in: path
+          name: group-id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: account-id
+          required: true
+          schema: 
+            type: integer
+      responses:
+        '200':
+          description: Account removed from group
+        '400':
+          description: Could not remove account from group
+  /payment:
+    get:
+      tags:
+        - Payment
+      operationId: get_payments
+      parameters:
+        - in: query
+          name: payment-id
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Fetched pamyents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PaymentDTO'
+    post: 
+      tags:
+        - Payment
+      operationId: create_payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentDTO'
+      responses:
+        '200':
+          description: Created payment
+        '400':
+          description: Could not create payment
+
+  /payment/{payment-id}:
+    delete:
+      tags:
+        - Payment
+      operationId: delete_payment
+      parameters:
+        - in: path
+          name: payment-id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Payment removed
+        '400':
+          description: Could not remove payment
+
+components:
+  schemas:
+    AccountDTO:
+      type:
+        object
+      required:
+        - id
+        - name
+        - username
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        username:
+          type: string
+
+    CreateAccountDTO:
+      type:
+        object
+      required:
+        - name
+        - username
+      properties:
+        name:
+          type: string
+        username:
+          type: string
+
+    GroupDTO:
+      type:
+        object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    CreateGroupDTO:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+
+    PaymentDTO:
+      type:
+        object
+      required:
+        - id
+        - payeeId
+        - groupId
+        - createdAt
+        - distribution
+      properties:
+        id:
+          type: integer
+        payeeId: 
+          type: integer
+        groupId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        distribution:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentDistributionDTO'
+        message:
+          type: string
+
+    CreatePaymentDTO:
+      type:
+        object
+      required:
+        - payeeId
+        - groupId
+        - distribution
+      properties:
+        payeeId: 
+          type: integer
+        groupId:
+          type: integer
+        distribution:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentDistributionDTO'
+        message:
+          type: string
+    
+    PaymentDistributionDTO:
+      type:
+        object
+      required:
+        - accountId
+        - amount
+      properties:
+        accountId:
+          type: integer
+        amount:
+          type: integer

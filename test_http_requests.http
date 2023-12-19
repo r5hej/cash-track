@@ -1,0 +1,45 @@
+@host = http://localhost:8000
+
+
+###
+GET {{host}}/account
+
+###
+POST {{host}}/account
+Content-Type: application/json
+
+{
+    "name": "pusling",
+    "username": "super_pus"
+}
+
+###
+DELETE {{host}}/account/1
+
+
+
+
+
+###
+GET {{host}}/group
+
+
+###
+POST {{host}}/group
+Content-Type: application/json
+
+{
+    "name": "la group2"
+}
+
+
+###
+DELETE {{host}}/group/1
+
+
+###
+PUT {{host}}/group/1/account/1/add
+
+
+###
+PUT {{host}}/group/1/account/1/remove
