@@ -12,10 +12,11 @@ def get_accounts() -> List[Account]:
     db.disconnect()
     return accounts
 
+
 def create_account(name: str, username: str) -> None:
     repo = get_account_repository()
     account = repo.create(name=name, username=username)
-    print(f'Created account {account}')
+    print(f"Created account {account}")
     db.disconnect()
 
 
@@ -24,9 +25,7 @@ def delete_account(account_id: int) -> Optional[Error]:
     account = repo.fetch_one(id=account_id)
     if account is None:
         return AccountNotFoundError(account_id=account_id)
-    
+
     repo.delete(account)
     db.disconnect()
     return None
-    
-

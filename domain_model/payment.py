@@ -1,18 +1,37 @@
-from typing import Protocol, Dict, Optional
 from datetime import datetime
-from domain_model.group import Group
+from typing import Protocol, Dict, Optional, List
+
 from domain_model.account import Account
-from dataclasses import dataclass
+from domain_model.group import Group
+from domain_model.tag import Tag
 
 
-@dataclass
 class Payment:
     id: int
     payee: Account
-    createdAt: datetime
+    created_at: datetime
     distribution: Dict[int, int]
-    message: str
-    groupId: int = None
+    message: Optional[str]
+    group: Group
+    tags: List[Tag]
+
+    def __init__(
+        self,
+        id: int,
+        payee: Account,
+        group: Group,
+        created_at: datetime,
+        distribution: Dict[int, int],
+        message: str = None,
+        tags: List[Tag] = [],
+    ):
+        self.id = id
+        self.payee = payee
+        self.group = group
+        self.created_at = created_at
+        self.distribution = distribution
+        self.message = message
+        self.tags = tags
 
 
 class PaymentFactory(Protocol):
@@ -22,12 +41,15 @@ class PaymentFactory(Protocol):
         group: Group,
         distribution: Dict[int, int] = {},
         message: Optional[str] = None,
+        tags: List[Tag] = [],
     ) -> Payment:
         pass
 
 
 class PaymentDistributionUpdater(Protocol):
-    def update_distribution(self, payment: Payment, distribution: Dict[int, int]) -> None:
+    def update_distribution(
+        self, payment: Payment, distribution: Dict[int, int]
+    ) -> None:
         pass
 
 

@@ -15,9 +15,11 @@ class AccountDeletor(Protocol):
 
 
 class AccountFetcher(Protocol):
-    def fetch_one(self, id: int = None, name: str = None, username: str = None) -> Optional[Account]:
+    def fetch_one(
+        self, id: int = None, name: str = None, username: str = None
+    ) -> Optional[Account]:
         pass
-    
+
     def fetch_all(self) -> List[Account]:
         pass
 

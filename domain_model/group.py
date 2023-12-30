@@ -8,4 +8,3 @@ class Group:
     id: int
     name: str
     accounts: List[Account]
-

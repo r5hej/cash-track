@@ -25,31 +25,34 @@ class _Sqlite3AccountRepository(AccountRepository):
                 "DELETE FROM accounts WHERE username=?", (account.username,)
             )
 
-    def fetch_one(self, id: int = None, name: str = None, username: str = None) -> Optional[Account]:
+    def fetch_one(
+        self, id: int = None, name: str = None, username: str = None
+    ) -> Optional[Account]:
         with db.sqlite3_connection:
             query = None
-            if (id):
-                query = 'SELECT rowid, name, username FROM accounts WHERE rowid = :id'
-            elif (name):
-                query = 'SELECT rowid, name, username FROM accounts WHERE name = :name'
-            elif (username):
-                query = 'SELECT rowid, name, username FROM accounts WHERE username = :username'
+            if id:
+                query = "SELECT rowid, name, username FROM accounts WHERE rowid = :id"
+            elif name:
+                query = "SELECT rowid, name, username FROM accounts WHERE name = :name"
+            elif username:
+                query = "SELECT rowid, name, username FROM accounts WHERE username = :username"
             else:
-                raise Exception('Invalid input. Everything is None')
-            for id, name, username in db.sqlite3_connection.execute(query, {'id': id, 'name': name, 'username': username}):
+                raise Exception("Invalid input. Everything is None")
+            for id, name, username in db.sqlite3_connection.execute(
+                query, {"id": id, "name": name, "username": username}
+            ):
                 return Account(id=id, name=name, username=username)
-                
-            
 
     def fetch_in_group(self, group: Group) -> List[Account]:
         with db.sqlite3_connection:
-            query = 'SELECT a.rowid, a.name, a.username FROM accounts a join accounts_and_groups ag ON a.rowid = ag.account_id WHERE ag.group_id = :group_id'
+            query = "SELECT a.rowid, a.name, a.username FROM accounts a join accounts_and_groups ag ON a.rowid = ag.account_id WHERE ag.group_id = :group_id"
             accounts: List[Account] = []
-            for id, name, username in db.sqlite3_connection.execute(query, {'group_id': group.id}):
+            for id, name, username in db.sqlite3_connection.execute(
+                query, {"group_id": group.id}
+            ):
                 accounts.append(Account(id=id, name=name, username=username))
 
             return accounts
-
 
     def fetch_all(self) -> List[Account]:
         with db.sqlite3_connection:

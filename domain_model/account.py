@@ -6,3 +6,4 @@ class Account:
     id: int
     name: str
     username: str
+    password: str

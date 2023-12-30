@@ -9,15 +9,12 @@ POST {{host}}/account
 Content-Type: application/json
 
 {
-    "name": "pusling",
-    "username": "super_pus"
+    "name": "user_uno",
+    "username": "super_user"
 }
 
 ###
 DELETE {{host}}/account/1
-
-
-
 
 
 ###

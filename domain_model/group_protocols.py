@@ -2,6 +2,7 @@ from typing import Protocol, List, Optional
 from .account import Account
 from .group import Group
 
+
 class GroupFactory(Protocol):
     def create(self, name: str, accounts: List[Account] = []) -> Group:
         pass
@@ -18,7 +19,7 @@ class GroupFetcher(Protocol):
 
     def fetch_all(self) -> List[Group]:
         pass
-    
+
 
 class GroupAccountHandle(Protocol):
     def add_account(self, account: Account, group: Group) -> None:

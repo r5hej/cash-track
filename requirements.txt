@@ -1,3 +1,5 @@
 fastapi
 uvicorn
 black
+ruff
+bcrypt

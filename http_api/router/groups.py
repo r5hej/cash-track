@@ -30,9 +30,7 @@ def get_groups(group_id: Optional[int] = None) -> List[GroupDTO]:
             for account in group.accounts
         ]
 
-        response_body.append(
-            GroupDTO(id=group.id, name=group.name, accounts=accounts)
-        )
+        response_body.append(GroupDTO(id=group.id, name=group.name, accounts=accounts))
 
     return response_body
 

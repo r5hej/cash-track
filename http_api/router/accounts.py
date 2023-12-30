@@ -1,6 +1,5 @@
 from typing import Optional, List
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
 import controllers.accounts
@@ -30,15 +29,16 @@ def get_accounts(
 ) -> List[AccountDTO]:
     response_body = []
     for account in controllers.accounts.get_accounts():
-        response_body.append(AccountDTO(id=account.id, name=account.name, username=account.username))
+        response_body.append(
+            AccountDTO(id=account.id, name=account.name, username=account.username)
+        )
     return response_body
-    
 
 
 @router.post("", status_code=201)
 def create_account(payload: CreateAccountDTO) -> None:
     controllers.accounts.create_account(name=payload.name, username=payload.username)
-    return 'Created account'
+    return "Created account"
 
 
 @router.delete("/{account_id}")
@@ -47,4 +47,4 @@ def delete_account(account_id: int) -> None:
     if error is not None:
         return error.get_error()
 
-    return 'Deleted account'
+    return "Deleted account"

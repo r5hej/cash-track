@@ -1,9 +1,10 @@
+from typing import List, Optional
+
+import persistence.db as db
+from domain_model.account import Account
 from domain_model.group import Group
 from domain_model.group_protocols import GroupRepository
-from domain_model.account import Account
-from typing import List, Optional
 from .account import get_account_repository
-import persistence.db as db
 
 
 class _Sqlite3GroupRepository(GroupRepository):
@@ -45,10 +46,10 @@ class _Sqlite3GroupRepository(GroupRepository):
     def fetch_all(self) -> List[Group]:
         with db.sqlite3_connection:
             group_missing_accounts: List[Group] = []
-            for id, name in db.sqlite3_connection.execute(
+            for rowid, name in db.sqlite3_connection.execute(
                 "SELECT rowid, name FROM groups"
             ):
-                group_missing_accounts.append(Group(id=id, name=name, accounts=[]))
+                group_missing_accounts.append(Group(id=rowid, name=name, accounts=[]))
 
             account_repo = get_account_repository()
 
